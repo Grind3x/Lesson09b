@@ -36,7 +36,7 @@ public class DataBase implements Serializable {
         }
 
         for (Group group : groupArr) {
-            if (group.getName().equals(name)) {
+            if (group.getGroupName().equals(name)) {
                 return group;
             }
         }

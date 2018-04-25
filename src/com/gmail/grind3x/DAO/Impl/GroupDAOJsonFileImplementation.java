@@ -17,7 +17,7 @@ public class GroupDAOJsonFileImplementation implements GroupDAO {
             throw new IllegalArgumentException("Null Group!");
         }
 
-        try (PrintWriter pw = new PrintWriter(new File(group.getName() + ".json"))) {
+        try (PrintWriter pw = new PrintWriter(new File(group.getGroupName() + ".json"))) {
             Gson gson = new Gson();
             pw.println(gson.toJson(group));
         } catch (IOException e) {

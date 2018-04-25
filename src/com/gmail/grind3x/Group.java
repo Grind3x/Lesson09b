@@ -4,15 +4,16 @@ import java.io.Serializable;
 import java.util.*;
 
 public class Group implements Commissar, Serializable {
-    private String name;
+    private String groupName;
     private List<Student> stList = new ArrayList<>();
+    private int stCount = 0;
 
     public Group() {
-        name = "defaultName";
+        groupName = "defaultName";
     }
 
     public Group(String name) {
-        this.name = name;
+        this.groupName = name;
     }
 
     @Override
@@ -28,32 +29,44 @@ public class Group implements Commissar, Serializable {
         return stListTwo;
     }
 
-    public void addStudent(Student student) {
+    public boolean addStudent(Student student) {
         if (student == null) {
             throw new IllegalArgumentException();
         }
         if (!isStudentInGroup(student)) {
-            stList.add(student);
+            if (stCount < 10) {
+                stList.add(student);
+                stCount++;
+                return true;
+            } else {
+                try {
+                    throw new OutOfStudentIndexException();
+                } catch (OutOfStudentIndexException e) {
+                    e.printStackTrace();
+                }
+            }
         }
+        return false;
     }
 
-    public void delStudent(Student student) {
+    public boolean delStudent(Student student) {
         if (student == null) {
             throw new IllegalArgumentException();
         }
         if (isStudentInGroup(student)) {
             stList.removeIf(x -> x.equals(student));
+            stCount--;
+            return true;
         }
+        return false;
     }
 
     public Student findStudentbySecondName(String secondName) {
         Student tmp = null;
         for (Student st : stList) {
-            if (st != null) {
                 if (secondName.equals(st.getSecondName())) {
                     tmp = st;
                     break;
-                }
             }
         }
         return tmp;
@@ -62,11 +75,9 @@ public class Group implements Commissar, Serializable {
     public Student findStudentByZachNumber(Long zachNumber) {
         Student tmp = null;
         for (Student st : stList) {
-            if (st != null) {
                 if (zachNumber.equals(st.getZach())) {
                     tmp = st;
                     break;
-                }
             }
         }
         return tmp;
@@ -79,12 +90,12 @@ public class Group implements Commissar, Serializable {
         return stList.indexOf(student) >= 0;
     }
 
-    public String getName() {
-        return name;
+    public String getGroupName() {
+        return groupName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 
     public void sort(int compareMode) {
@@ -101,7 +112,7 @@ public class Group implements Commissar, Serializable {
 
     @Override
     public String toString() {
-        String retVal = "Группа " + name + ':' + '\n';
+        String retVal = "Группа " + groupName + ':' + '\n';
         for (Student st : stList) {
             retVal += (st + "\n");
         }
@@ -113,12 +124,12 @@ public class Group implements Commissar, Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Group group = (Group) o;
-        return Objects.equals(name, group.name) &&
+        return Objects.equals(groupName, group.groupName) &&
                 Objects.equals(stList, group.stList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, stList);
+        return Objects.hash(groupName, stList);
     }
 }
